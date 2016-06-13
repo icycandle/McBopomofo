@@ -38,7 +38,8 @@
 @interface VTCandidateController : NSWindowController
 {
 @protected
-    __weak id<VTCandidateControllerDelegate> _delegate;
+    id<VTCandidateControllerDelegate> _delegate;
+    // http://stackoverflow.com/questions/36147625/xcode-7-3-cannot-create-weak-reference-in-file-using-manual-reference-counting
     NSArray *_keyLabels;
     NSFont *_keyLabelFont;
     NSFont *_candidateFont;
