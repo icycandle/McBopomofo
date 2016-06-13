@@ -87,6 +87,8 @@ static NSString *const kPlainBopomofoModeIdentifier = @"org.openvanilla.inputmet
 
 // key code enums
 enum {
+    kVkAnsiJ = 38,
+    kVkAnsiK = 40,
     kEnterKeyCode = 76,
     kUpKeyCode = 126,
     kDownKeyCode = 125,
@@ -97,6 +99,7 @@ enum {
     kHomeKeyCode = 115,
     kEndKeyCode = 119,
     kDeleteKeyCode = 117
+
 };
 
 // a global object for saving the "learned" user candidate selections
@@ -558,6 +561,15 @@ public:
     NSInteger extraChooseCandidateKey = useVerticalMode ? kLeftKeyCode : kDownKeyCode;
     NSInteger absorbedArrowKey = useVerticalMode ? kRightKeyCode : kUpKeyCode;
     NSInteger verticalModeOnlyChooseCandidateKey = useVerticalMode ? absorbedArrowKey : 0;
+
+    if (([kCandidateKeys containsString:@"j"]) && ([kCandidateKeys containsString:@"k"])) {
+        NSLog(@"string contains j or k!");
+    } else {
+        cursorForwardKey = kVkAnsiK;
+        cursorBackwardKey = kVkAnsiJ;
+        NSLog(@"string not contains j or k!");
+    }
+
 
     // get the unicode character code
     UniChar charCode = [inputText length] ? [inputText characterAtIndex:0] : 0;
