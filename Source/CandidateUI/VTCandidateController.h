@@ -1,7 +1,7 @@
 //
 // VTCandidateController.h
 //
-// Copyright (c) 2012 Lukhnos D. Liu (http://lukhnos.org)
+// Copyright (c) 2012 Lukhnos D. Liu (http://lukhnos.org )
 //
 // Permission is hereby granted, free of charge, to any person
 // obtaining a copy of this software and associated documentation
