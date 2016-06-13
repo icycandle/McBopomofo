@@ -86,9 +86,15 @@ static NSString *const kBopomofoModeIdentifier = @"org.openvanilla.inputmethod.M
 static NSString *const kPlainBopomofoModeIdentifier = @"org.openvanilla.inputmethod.McBopomofo.PlainBopomofo";
 
 // key code enums
+// reference from /System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/Headers/Events.h
 enum {
     kVkAnsiJ = 38,
     kVkAnsiK = 40,
+    kVkAnsiH = 4,
+    kVkAnsiL = 37,
+    kVkAnsiQ = 12,
+    kVkAnsiE = 14,
+    kVkSpace = 49,
     kEnterKeyCode = 76,
     kUpKeyCode = 126,
     kDownKeyCode = 125,
@@ -99,7 +105,6 @@ enum {
     kHomeKeyCode = 115,
     kEndKeyCode = 119,
     kDeleteKeyCode = 117
-
 };
 
 // a global object for saving the "learned" user candidate selections
@@ -562,12 +567,18 @@ public:
     NSInteger absorbedArrowKey = useVerticalMode ? kRightKeyCode : kUpKeyCode;
     NSInteger verticalModeOnlyChooseCandidateKey = useVerticalMode ? absorbedArrowKey : 0;
 
-    if (([kCandidateKeys containsString:@"j"]) && ([kCandidateKeys containsString:@"k"])) {
-        NSLog(@"string contains j or k!");
+    if (([kCandidateKeys containsString:@"j"]) &&
+        ([kCandidateKeys containsString:@"k"]) &&
+        ([kCandidateKeys containsString:@"h"]) &&
+        ([kCandidateKeys containsString:@"l"]))
+    {
+        // kCandidateKeys contains j k h l, disable hjkl move cursor feature.
     } else {
-        cursorForwardKey = kVkAnsiK;
-        cursorBackwardKey = kVkAnsiJ;
-        NSLog(@"string not contains j or k!");
+        // enable hjkl move cursor feature!
+        cursorBackwardKey = kVkAnsiH;
+        extraChooseCandidateKey = kVkAnsiJ;
+        absorbedArrowKey = kVkAnsiK;
+        cursorForwardKey = kVkAnsiL;
     }
 
 
@@ -770,7 +781,7 @@ public:
         return YES;
     }
 
-    if (keyCode == kHomeKeyCode) {
+    if (keyCode == kHomeKeyCode || keyCode == kVkAnsiQ) {
         if (!_bpmfReadingBuffer->isEmpty()) {
             [self beep];
         }
@@ -791,7 +802,7 @@ public:
         return YES;
     }
 
-    if (keyCode == kEndKeyCode) {
+    if (keyCode == kEndKeyCode || keyCode == kVkAnsiE) {
         if (!_bpmfReadingBuffer->isEmpty()) {
             [self beep];
         }
@@ -1002,7 +1013,7 @@ public:
         [self updateClientComposingBuffer:_currentCandidateClient];
         return YES;
     }
-    else if (charCode == 13 || keyCode == kEnterKeyCode) {
+    else if (charCode == 13 || keyCode == kEnterKeyCode || keyCode == kVkSpace) {
         [self candidateController:gCurrentCandidateController didSelectCandidateAtIndex:gCurrentCandidateController.selectedCandidateIndex];
         return YES;
     }
